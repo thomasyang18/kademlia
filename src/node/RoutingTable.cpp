@@ -1,4 +1,5 @@
 #include "node/RoutingTable.hpp"
+#include <algorithm>
 
 RoutingTable::RoutingTable(NodeID self) : selfID(self) {
     buckets.resize(256);  // One bucket per bit

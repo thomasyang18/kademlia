@@ -4,6 +4,7 @@
 #include <iostream>
 #include <thread>
 #include "protocol/Protocol.hpp"
+#include "node/RoutingTable.hpp"
 
 class UDPNode {
 public:
