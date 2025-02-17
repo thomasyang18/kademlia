@@ -34,11 +34,7 @@ private:
     std::unique_ptr<P2PServer> server2;
 };
 
-::testing::Environment* const p2p_env =
-    ::testing::AddGlobalTestEnvironment(new P2PTestEnvironment);
-
 TEST(P2PServerTest, Ping) {
-    auto* env = static_cast<P2PTestEnvironment*>(::testing::AddGlobalTestEnvironment());
     P2PServer* server1 = env->GetServer1();
     P2PServer* server2 = env->GetServer2();
 
