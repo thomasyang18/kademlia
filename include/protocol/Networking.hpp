@@ -14,6 +14,10 @@ public:
 
     void startReceive();
 
+    Node getMyNode() const { return myNode; }
+
+    RoutingTable& getRoutingTable() { return routingTable_; }
+
 private:
     boost::asio::ip::udp::socket socket_;
     boost::asio::ip::udp::endpoint remoteEndpoint_;
