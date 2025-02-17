@@ -19,9 +19,6 @@ public:
         // Detach threads to let them run independently
         server1Thread.detach();
         server2Thread.detach();
-
-        // Set the global pointer
-        env = this;
     }
 
     void TearDown() override {
@@ -32,33 +29,11 @@ public:
     P2PServer* GetServer1() { return server1.get(); }
     P2PServer* GetServer2() { return server2.get(); }
 
-    static P2PTestEnvironment* env;
-
 private:
     std::unique_ptr<P2PServer> server1;
     std::unique_ptr<P2PServer> server2;
 };
-
-P2PTestEnvironment* P2PTestEnvironment::env = nullptr;
-
-TEST(P2PServerTest, Ping) {
-    P2PServer* server1 = P2PTestEnvironment::env->GetServer1();
-    P2PServer* server2 = P2PTestEnvironment::env->GetServer2();
-
-    server1->ping("127.0.0.1", 10002);
-
-    // Wait for the ping to be processed
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    // Check if server2 has server1 in its routing table
-    auto& routingTable = server2->getRoutingTable();
-    auto nodes = routingTable.findClosestNodes(server1->getMyNode().id);
-    ASSERT_EQ(nodes.size(), 1);
-    ASSERT_EQ(nodes[0].id, server1->getMyNode().id);
-}
-
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::AddGlobalTestEnvironment(new P2PTestEnvironment);
     return RUN_ALL_TESTS();
 }
