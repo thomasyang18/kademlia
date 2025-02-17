@@ -37,6 +37,7 @@ CPP_OBJECTS := $(if $(filter $(OBJDIR)/main.o, $(CPP_OBJECTS)), \
 
 # Final target: link both C++
 TARGET = $(BINDIR)/kademlia_client
+TEST_TARGET = $(BINDIR)/kademlia_tests
 
 # Ensure necessary directories exist
 $(shell mkdir -p $(OBJDIR) $(BINDIR))
@@ -45,6 +46,11 @@ all: $(TARGET)
 
 $(TARGET): $(CPP_OBJECTS)
 	$(CXX) $(CXXFLAGS) $(CPP_OBJECTS) -o $@ $(LDFLAGS)
+
+tests: $(TEST_TARGET)
+
+$(TEST_TARGET): $(TEST_OBJECTS)
+	$(CXX) $(CXXFLAGS) $(TEST_OBJECTS) -o $@ $(LDFLAGS)
 
 # Rule to compile C++ (.cpp) files into .o files.
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
@@ -65,6 +71,6 @@ $(OBJDIR)/%.o: $(TESTDIR)/%.cpp
 -include $(TEST_OBJECTS:.o=.d)
 
 clean:
-	rm -rf $(OBJDIR) $(TARGET)
+	rm -rf $(OBJDIR) $(TARGET) $(TEST_TARGET)
 
-.PHONY: all clean
+.PHONY: all clean tests
