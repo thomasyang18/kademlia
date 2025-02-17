@@ -22,23 +22,16 @@ OBJDIR = obj
 BINDIR = bin
 TESTDIR = tests
 
-# Find all C++ sources (.cpp)
-CPP_SOURCES := $(shell find $(SRCDIR) -type f -name '*.cpp')
+# Find all C++ sources (.cpp) excluding main.cpp
+CPP_SOURCES := $(shell find $(SRCDIR) -type f -name '*.cpp' ! -name 'main.cpp')
 TEST_SOURCES := $(shell find $(TESTDIR) -type f -name '*.cpp')
-
-# Exclude main.cpp from the test sources
-TEST_SOURCES := $(filter-out $(SRCDIR)/main.cpp, $(CPP_SOURCES) $(TEST_SOURCES))
 
 # Convert sources to object files (preserving directory structure)
 CPP_OBJECTS := $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(CPP_SOURCES))
-TEST_OBJECTS := $(patsubst %.cpp, $(OBJDIR)/%.o, $(TEST_SOURCES))
+TEST_OBJECTS := $(patsubst $(TESTDIR)/%.cpp, $(OBJDIR)/%.o, $(TEST_SOURCES))
+MAIN_OBJECT = $(OBJDIR)/main.o
 
-# Place main.o at the beginning if it exists
-CPP_OBJECTS := $(if $(filter $(OBJDIR)/main.o, $(CPP_OBJECTS)), \
-             $(OBJDIR)/main.o $(filter-out $(OBJDIR)/main.o, $(CPP_OBJECTS)), \
-             $(CPP_OBJECTS))
-
-# Final target: link both C++
+# Final targets
 TARGET = $(BINDIR)/kademlia_client
 TEST_TARGET = $(BINDIR)/kademlia_tests
 
@@ -47,8 +40,8 @@ $(shell mkdir -p $(OBJDIR) $(BINDIR))
 
 all: $(TARGET)
 
-$(TARGET): $(CPP_OBJECTS)
-	$(CXX) $(CXXFLAGS) $(CPP_OBJECTS) -o $@ $(LDFLAGS)
+$(TARGET): $(CPP_OBJECTS) $(MAIN_OBJECT)
+	$(CXX) $(CXXFLAGS) $(CPP_OBJECTS) $(MAIN_OBJECT) -o $@ $(LDFLAGS)
 
 tests: $(TEST_TARGET)
 
@@ -64,6 +57,10 @@ $(OBJDIR)/%.o: $(TESTDIR)/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
+$(OBJDIR)/main.o: $(SRCDIR)/main.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
 # Dependency tracking for C++ sources (if needed)
 # $(OBJDIR)/%.d: $(SRCDIR)/%.cpp
 # 	@mkdir -p $(dir $@)
@@ -72,6 +69,7 @@ $(OBJDIR)/%.o: $(TESTDIR)/%.cpp
 # Include dependency files (if they exist)
 -include $(CPP_OBJECTS:.o=.d)
 -include $(TEST_OBJECTS:.o=.d)
+-include $(OBJDIR)/main.o.d
 
 clean:
 	rm -rf $(OBJDIR) $(TARGET) $(TEST_TARGET)
