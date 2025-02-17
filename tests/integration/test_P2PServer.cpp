@@ -19,6 +19,9 @@ public:
         // Detach threads to let them run independently
         server1Thread.detach();
         server2Thread.detach();
+
+        // Set the global pointer
+        env = this;
     }
 
     void TearDown() override {
@@ -29,14 +32,18 @@ public:
     P2PServer* GetServer1() { return server1.get(); }
     P2PServer* GetServer2() { return server2.get(); }
 
+    static P2PTestEnvironment* env;
+
 private:
     std::unique_ptr<P2PServer> server1;
     std::unique_ptr<P2PServer> server2;
 };
 
+P2PTestEnvironment* P2PTestEnvironment::env = nullptr;
+
 TEST(P2PServerTest, Ping) {
-    P2PServer* server1 = env->GetServer1();
-    P2PServer* server2 = env->GetServer2();
+    P2PServer* server1 = P2PTestEnvironment::env->GetServer1();
+    P2PServer* server2 = P2PTestEnvironment::env->GetServer2();
 
     server1->ping("127.0.0.1", 10002);
 
@@ -52,5 +59,6 @@ TEST(P2PServerTest, Ping) {
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
+    ::testing::AddGlobalTestEnvironment(new P2PTestEnvironment);
     return RUN_ALL_TESTS();
 }
