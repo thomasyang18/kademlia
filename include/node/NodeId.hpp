@@ -1,7 +1,4 @@
-#pragma once 
-
-#include <array>
-#include <string>
+#pragma once
 
 #include <array>
 #include <string>
@@ -14,13 +11,7 @@ struct NodeID {
     }
 
     // XOR distance for routing logic
-    NodeID operator^(const NodeID& other) const {
-        NodeID result;
-        for (size_t i = 0; i < bytes.size(); i++) {
-            result.bytes[i] = bytes[i] ^ other.bytes[i];
-        }
-        return result;
-    }
+    NodeID operator^(const NodeID& other) const;
 };
 
 struct Node {

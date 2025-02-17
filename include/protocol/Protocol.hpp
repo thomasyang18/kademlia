@@ -1,4 +1,7 @@
-#pragma once 
+#pragma once
+
+#include <vector>
+#include "node/NodeId.hpp"
 
 enum class MessageType {
     PING,           // Check if node is alive
