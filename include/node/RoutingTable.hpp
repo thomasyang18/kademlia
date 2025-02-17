@@ -6,6 +6,7 @@
 
 class RoutingTable {
 public:
+    RoutingTable();
     RoutingTable(NodeID self);
 
     void update(const Node& node);

@@ -1,7 +1,8 @@
 #include "protocol/Networking.hpp"
 
 UDPNode::UDPNode(boost::asio::io_context& io_context, uint16_t port)
-    : socket_(io_context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port)) {
+    : socket_(io_context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port)),
+      routingTable_(NodeID()) {
     startReceive();
 }
 
