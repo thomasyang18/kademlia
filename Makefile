@@ -21,7 +21,7 @@ SRCDIR = src
 OBJDIR = obj
 BINDIR = bin
 
-# Find all C++ sources (.cpp) and CUDA sources (.cu)
+# Find all C++ sources (.cpp) 
 CPP_SOURCES := $(shell find $(SRCDIR) -type f -name '*.cpp')
 
 # Convert sources to object files (preserving directory structure)
@@ -32,7 +32,7 @@ CPP_OBJECTS := $(if $(filter $(OBJDIR)/main.o, $(CPP_OBJECTS)), \
              $(OBJDIR)/main.o $(filter-out $(OBJDIR)/main.o, $(CPP_OBJECTS)), \
              $(CPP_OBJECTS))
 
-# Final target: link both C++ and CUDA object files
+# Final target: link both C++ 
 TARGET = $(BINDIR)/kademlia_client
 
 # Ensure necessary directories exist
