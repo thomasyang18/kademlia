@@ -26,9 +26,12 @@ TESTDIR = tests
 CPP_SOURCES := $(shell find $(SRCDIR) -type f -name '*.cpp')
 TEST_SOURCES := $(shell find $(TESTDIR) -type f -name '*.cpp')
 
+# Exclude main.cpp from the test sources
+TEST_SOURCES := $(filter-out $(SRCDIR)/main.cpp, $(CPP_SOURCES) $(TEST_SOURCES))
+
 # Convert sources to object files (preserving directory structure)
 CPP_OBJECTS := $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(CPP_SOURCES))
-TEST_OBJECTS := $(patsubst $(TESTDIR)/%.cpp, $(OBJDIR)/%.o, $(TEST_SOURCES))
+TEST_OBJECTS := $(patsubst %.cpp, $(OBJDIR)/%.o, $(TEST_SOURCES))
 
 # Place main.o at the beginning if it exists
 CPP_OBJECTS := $(if $(filter $(OBJDIR)/main.o, $(CPP_OBJECTS)), \
