@@ -6,6 +6,7 @@ int main() {
     boost::asio::ip::udp::socket socket(io_context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 12345));
 
     std::cout << "UDP server started on port 12345" << std::endl;
+    while(1);
 
     return 0;
 }
