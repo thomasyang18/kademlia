@@ -13,7 +13,3 @@ struct Config {
     Config(const Config&) = delete;
     Config& operator=(const Config&) = delete;
 };
-
-inline Config& Config::operator()() {
-    return getInstance();
-}

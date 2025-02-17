@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include "node/NodeId.hpp"
+#include "config.hpp"
 
 class RoutingTable {
 public:
@@ -11,7 +12,7 @@ public:
 
     void update(const Node& node);
 
-    std::vector<Node> findClosestNodes(NodeID target, int k = Config::().kBucketSize);
+    std::vector<Node> findClosestNodes(NodeID target, int k = Config::getInstance().kBucketSize);
 
 private:
     NodeID selfID;
