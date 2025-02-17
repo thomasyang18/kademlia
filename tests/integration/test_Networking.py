@@ -7,7 +7,7 @@ ports = [5001, 5002, 5003]
 processes = [subprocess.Popen(["./bin/kademlia_client", str(port)]) for port in ports]
 
 # Wait for nodes to discover each other
-time.sleep(5)
+time.sleep(2)
 
 # Check routing tables (assuming your node has an API for querying its state)
 for port in ports:
