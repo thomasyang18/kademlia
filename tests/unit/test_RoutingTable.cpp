@@ -43,6 +43,22 @@ TEST(RoutingTableTest, XorDistance) {
     ASSERT_EQ(result.bytes[2], 5);
 }
 
+TEST(RoutingTableTest, UpdateWithManyNodes) {
+    NodeID selfID = {{0}};
+    RoutingTable routingTable(selfID);
+
+    for (int i = 1; i <= 30; ++i) {
+        Node node = {{static_cast<uint8_t>(i)}, "127.0.0.1", 12345 + i};
+        routingTable.update(node);
+    }
+
+    std::vector<Node> closestNodes = routingTable.findClosestNodes({{1}});
+    ASSERT_EQ(closestNodes.size(), 20);
+    for (int i = 1; i <= 20; ++i) {
+        ASSERT_EQ(closestNodes[i - 1].id.bytes[0], static_cast<uint8_t>(i + 9));
+    }
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
