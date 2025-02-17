@@ -45,8 +45,8 @@ $(TARGET): $(CPP_OBJECTS) $(MAIN_OBJECT)
 
 tests: $(TEST_TARGET)
 
-$(TEST_TARGET): $(TEST_OBJECTS)
-	$(CXX) $(CXXFLAGS) $(TEST_OBJECTS) -o $@ $(LDFLAGS)
+$(TEST_TARGET): $(TEST_OBJECTS) $(CPP_OBJECTS)
+	$(CXX) $(CXXFLAGS) $(TEST_OBJECTS) $(CPP_OBJECTS) -o $@ $(LDFLAGS)
 
 # Rule to compile C++ (.cpp) files into .o files.
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
