@@ -1,10 +1,12 @@
 #pragma once
 
 #include "protocol/Networking.hpp"
+#include <boost/asio.hpp>
+#include <memory>
 
 class P2PServer {
 public:
-    P2PServer(boost::asio::io_context& io_context, uint16_t port);
+    P2PServer(uint16_t port);
 
     void start();
 
@@ -19,5 +21,6 @@ public:
     RoutingTable& getRoutingTable() { return udpNode_.getRoutingTable(); }
 
 private:
+    std::unique_ptr<boost::asio::io_context> io_context_;
     UDPNode udpNode_;
 };

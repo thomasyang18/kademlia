@@ -1,11 +1,13 @@
 #include "protocol/P2PServer.hpp"
 #include <iostream>
 
-P2PServer::P2PServer(boost::asio::io_context& io_context, uint16_t port)
-    : udpNode_(io_context, port) {}
+P2PServer::P2PServer(uint16_t port)
+    : io_context_(std::make_unique<boost::asio::io_context>()),
+      udpNode_(*io_context_, port) {}
 
 void P2PServer::start() {
     udpNode_.startReceive();
+    io_context_->run();
 }
 
 void P2PServer::ping(const std::string& ip, uint16_t port) {
