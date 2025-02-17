@@ -11,7 +11,7 @@ public:
 
     void update(const Node& node);
 
-    std::vector<Node> findClosestNodes(NodeID target, int k = 20);
+    std::vector<Node> findClosestNodes(NodeID target, int k = K_BUCKET_SIZE);
 
 private:
     NodeID selfID;

@@ -1,4 +1,5 @@
 #include "protocol/P2PServer.hpp"
+#include "config.hpp"
 #include <iostream>
 
 P2PServer::P2PServer(uint16_t port)
@@ -26,7 +27,7 @@ void P2PServer::handleMessage(const Message& msg) {
             udpNode_.sendMessage({MessageType::PONG, udpNode_.getMyNode(), {}, {}}, msg.sender.ip, msg.sender.port);
             break;
         case MessageType::FIND_NODE:
-            udpNode_.sendMessage({MessageType::FIND_NODE_REPLY, udpNode_.getMyNode(), msg.target, udpNode_.getRoutingTable().findClosestNodes(msg.target)}, msg.sender.ip, msg.sender.port);
+            udpNode_.sendMessage({MessageType::FIND_NODE_REPLY, udpNode_.getMyNode(), msg.target, udpNode_.getRoutingTable().findClosestNodes(msg.target, K_BUCKET_SIZE)}, msg.sender.ip, msg.sender.port);
             break;
         case MessageType::FIND_NODE_REPLY:
             for (const auto& node : msg.nodes) {

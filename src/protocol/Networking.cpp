@@ -1,4 +1,5 @@
 #include "protocol/Networking.hpp"
+#include "config.hpp"
 
 UDPNode::UDPNode(boost::asio::io_context& io_context, uint16_t port)
     : socket_(io_context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port)),
@@ -39,7 +40,7 @@ void UDPNode::handleMessage(const Message& msg) {
             sendMessage({MessageType::PONG, myNode, {}}, msg.sender.ip, msg.sender.port);
             break;
         case MessageType::FIND_NODE:
-            sendMessage({MessageType::FIND_NODE_REPLY, myNode, msg.target, routingTable_.findClosestNodes(msg.target)}, msg.sender.ip, msg.sender.port);
+            sendMessage({MessageType::FIND_NODE_REPLY, myNode, msg.target, routingTable_.findClosestNodes(msg.target, K_BUCKET_SIZE)}, msg.sender.ip, msg.sender.port);
             break;
         case MessageType::FIND_NODE_REPLY:
             for (const auto& node : msg.nodes) {
