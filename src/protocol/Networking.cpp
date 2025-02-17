@@ -37,7 +37,7 @@ std::vector<uint8_t> UDPNode::serializeMessage(const Message& msg) {
 void UDPNode::handleMessage(const Message& msg) {
     switch (msg.type) {
         case MessageType::PING:
-            sendMessage({MessageType::PONG, myNode, {}}, msg.sender.ip, msg.sender.port);
+            sendMessage({MessageType::PONG, myNode, {}, {}}, msg.sender.ip, msg.sender.port);
             break;
         case MessageType::FIND_NODE:
             sendMessage({MessageType::FIND_NODE_REPLY, myNode, msg.target, routingTable_.findClosestNodes(msg.target, Config::().kBucketSize)}, msg.sender.ip, msg.sender.port);
