@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "protocol/P2PServer.hpp"
+#include <thread>
 
 class P2PTestEnvironment : public ::testing::Environment {
 public:
@@ -12,8 +13,12 @@ public:
         // server1 = std::make_unique<P2PServer>(0);
         // server2 = std::make_unique<P2PServer>(0);
 
-        server1->start();
-        server2->start();
+        std::thread server1Thread([this]() { server1->start(); });
+        std::thread server2Thread([this]() { server2->start(); });
+
+        // Detach threads to let them run independently
+        server1Thread.detach();
+        server2Thread.detach();
     }
 
     void TearDown() override {
