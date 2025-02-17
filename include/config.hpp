@@ -6,11 +6,14 @@ struct Config {
         return instance;
     }
 
-    const int K_BUCKET_SIZE = 20;
-    const int MAX_BUCKETS = 256;
+    const int kBucketSize = 20;
+    const int maxBuckets = 256;
 
-private:
     Config() = default;
     Config(const Config&) = delete;
     Config& operator=(const Config&) = delete;
 };
+
+inline Config& Config::operator()() {
+    return getInstance();
+}

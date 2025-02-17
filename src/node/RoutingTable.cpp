@@ -3,11 +3,11 @@
 #include <algorithm>
 
 RoutingTable::RoutingTable() : selfID(NodeID()) {
-    buckets.resize(MAX_BUCKETS);  // One bucket per bit
+    buckets.resize(Config::().maxBuckets);  // One bucket per bit
 }
 
 RoutingTable::RoutingTable(NodeID self) : selfID(self) {
-    buckets.resize(MAX_BUCKETS);  // One bucket per bit
+    buckets.resize(Config::().maxBuckets);  // One bucket per bit
 }
 
 void RoutingTable::update(const Node& node) {
@@ -24,7 +24,7 @@ void RoutingTable::update(const Node& node) {
     bucket.push_back(node);
 
     // Enforce a size limit (e.g., k=20 for Kademlia)
-    if (bucket.size() > K_BUCKET_SIZE) {
+    if (bucket.size() > Config::().kBucketSize) {
         bucket.erase(bucket.begin());  // Remove oldest
     }
 }
@@ -32,7 +32,7 @@ void RoutingTable::update(const Node& node) {
 std::vector<Node> RoutingTable::findClosestNodes(NodeID target, int k) {
     std::vector<Node> closest;
     // Iterate over buckets, starting with the closest
-    for (int i = xorDistance(selfID, target); i < MAX_BUCKETS && closest.size() < k; i++) {
+    for (int i = xorDistance(selfID, target); i < Config::().maxBuckets && closest.size() < k; i++) {
         closest.insert(closest.end(), buckets[i].begin(), buckets[i].end());
     }
     return closest;
@@ -40,8 +40,8 @@ std::vector<Node> RoutingTable::findClosestNodes(NodeID target, int k) {
 
 int RoutingTable::xorDistance(const NodeID& a, const NodeID& b) {
     NodeID dist = a ^ b;
-    for (int i = 0; i < MAX_BUCKETS; i++) {
+    for (int i = 0; i < Config::().maxBuckets; i++) {
         if ((dist.bytes[i / 8] >> (7 - (i % 8))) & 1) return i;
     }
-    return MAX_BUCKETS - 1;
+    return Config::().maxBuckets - 1;
 }
