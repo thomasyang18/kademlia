@@ -21,6 +21,7 @@ SRCDIR = src
 OBJDIR = obj
 BINDIR = bin
 TESTDIR = tests
+TESTBINDIR = $(BINDIR)/tests
 
 # Find all C++ sources (.cpp) excluding main.cpp
 CPP_SOURCES := $(shell find $(SRCDIR) -type f -name '*.cpp' ! -name 'main.cpp')
@@ -33,20 +34,20 @@ MAIN_OBJECT = $(OBJDIR)/main.o
 
 # Final targets
 TARGET = $(BINDIR)/kademlia_client
-TEST_TARGET = $(BINDIR)/kademlia_tests
+TEST_TARGETS := $(patsubst $(TESTDIR)/%.cpp, $(TESTBINDIR)/%, $(TEST_SOURCES))
 
 # Ensure necessary directories exist
-$(shell mkdir -p $(OBJDIR) $(BINDIR))
+$(shell mkdir -p $(OBJDIR) $(BINDIR) $(TESTBINDIR))
 
 all: $(TARGET)
 
 $(TARGET): $(CPP_OBJECTS) $(MAIN_OBJECT)
 	$(CXX) $(CXXFLAGS) $(CPP_OBJECTS) $(MAIN_OBJECT) -o $@ $(LDFLAGS)
 
-tests: $(TEST_TARGET)
+tests: $(TEST_TARGETS)
 
-$(TEST_TARGET): $(TEST_OBJECTS) $(CPP_OBJECTS)
-	$(CXX) $(CXXFLAGS) $(TEST_OBJECTS) $(CPP_OBJECTS) -o $@ $(LDFLAGS)
+$(TESTBINDIR)/%: $(OBJDIR)/%.o
+	$(CXX) $(CXXFLAGS) $< -o $@ $(LDFLAGS)
 
 # Rule to compile C++ (.cpp) files into .o files.
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
@@ -72,6 +73,6 @@ $(OBJDIR)/main.o: $(SRCDIR)/main.cpp
 -include $(OBJDIR)/main.o.d
 
 clean:
-	rm -rf $(OBJDIR) $(TARGET) $(TEST_TARGET)
+	rm -rf $(OBJDIR) $(TARGET) $(TESTBINDIR)/*
 
 .PHONY: all clean tests
