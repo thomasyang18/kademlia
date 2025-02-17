@@ -47,6 +47,7 @@ $(TARGET): $(CPP_OBJECTS) $(MAIN_OBJECT)
 tests: $(TEST_TARGETS)
 
 $(TESTBINDIR)/%: $(OBJDIR)/%.o
+	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $< -o $@ $(LDFLAGS)
 
 # Rule to compile C++ (.cpp) files into .o files.
