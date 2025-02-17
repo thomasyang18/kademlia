@@ -4,12 +4,14 @@ CXX = g++
 # Flags
 CXXFLAGS = -std=c++17 -Wall -Wextra
 
-# Include directories 
-INCLUDES = -I./include 
+# Include directories
+INCLUDES = -I./include
 
+# Linker flags
+LDFLAGS = -lboost_system -lpthread
 
 ifeq ($(BUILD_TYPE), debug)
-    CXXFLAGS += -O0 -DDEBUG -g 
+    CXXFLAGS += -O0 -DDEBUG -g
 else
     CXXFLAGS += -O3 -DRELEASE
 endif
@@ -38,8 +40,8 @@ $(shell mkdir -p $(OBJDIR) $(BINDIR))
 
 all: $(TARGET)
 
-$(TARGET): $(CPP_OBJECTS) 
-	$(CXX) $(CXXFLAGS) $(CPP_OBJECTS) -o $@ $(CXXLIB) 
+$(TARGET): $(CPP_OBJECTS)
+	$(CXX) $(CXXFLAGS) $(CPP_OBJECTS) -o $@ $(LDFLAGS)
 
 # Rule to compile C++ (.cpp) files into .o files.
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
