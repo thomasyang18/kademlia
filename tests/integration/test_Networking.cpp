@@ -2,6 +2,9 @@
 #include <boost/asio.hpp>
 #include <thread>
 #include "protocol/Networking.hpp"
+#include "node/RoutingTable.hpp"
+#include "node/NodeId.hpp"
+#include "protocol/Protocol.hpp"
 
 void runNode(uint16_t port) {
     boost::asio::io_context io_context;
