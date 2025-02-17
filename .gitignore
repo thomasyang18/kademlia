@@ -2,3 +2,4 @@ bin/*
 obj/*
 dev/*
 notes/*
+.aider*
