@@ -2,7 +2,8 @@
 
 UDPNode::UDPNode(boost::asio::io_context& io_context, uint16_t port)
     : socket_(io_context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port)),
-      routingTable_(NodeID()) {
+      myNode({generateRandomNodeID(), "127.0.0.1", port}),
+      routingTable_(myNode.id) {
     startReceive();
 }
 
@@ -39,6 +40,11 @@ void UDPNode::handleMessage(const Message& msg) {
             break;
         case MessageType::FIND_NODE:
             sendMessage({MessageType::FIND_NODE_REPLY, myNode, msg.target, routingTable_.findClosestNodes(msg.target)}, msg.sender.ip, msg.sender.port);
+            break;
+        case MessageType::FIND_NODE_REPLY:
+            for (const auto& node : msg.nodes) {
+                routingTable_.update(node);
+            }
             break;
         default:
             break;

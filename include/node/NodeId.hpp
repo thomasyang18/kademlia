@@ -14,6 +14,8 @@ struct NodeID {
     NodeID operator^(const NodeID& other) const;
 };
 
+NodeID generateRandomNodeID();
+
 struct Node {
     NodeID id;
     std::string ip;
