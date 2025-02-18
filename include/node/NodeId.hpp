@@ -2,19 +2,28 @@
 
 #include <array>
 #include <string>
+#include <bitset>
+#include "config.hpp"
 
-struct NodeID {
-    std::array<uint8_t, 32> bytes;  // 256-bit ID
+class NodeID {
+    std::bitset<Config::W> _id;
+public:
+    // useful for testing, serialization; generally should just move with moveID though 
+    explicit NodeID(const std::bitset<Config::W>& id) : _id(id) {}
 
+    // Equality operator
     bool operator==(const NodeID& other) const {
-        return bytes == other.bytes;
+        return _id == other._id;
     }
 
     // XOR distance for routing logic
-    NodeID operator^(const NodeID& other) const;
-};
+    NodeID operator^(const NodeID& other) const {
+        return NodeID(_id ^ other._id);
+    }
 
-NodeID generateRandomNodeID();
+    // Static function to generate a random NodeID
+    static NodeID generateRandomNodeID();
+};
 
 struct Node {
     NodeID id;

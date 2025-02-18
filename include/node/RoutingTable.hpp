@@ -6,17 +6,13 @@
 #include "config.hpp"
 
 class RoutingTable {
+
 public:
-    RoutingTable();
     RoutingTable(NodeID self);
 
-    void update(const Node& node);
-
-    std::vector<Node> findClosestNodes(NodeID target, int k = Config::getInstance().kBucketSize);
+    serializable_max_buffer_t findClosestNodes(NodeID target);
 
 private:
     NodeID selfID;
-    std::vector<std::vector<Node>> buckets;  // 256 buckets
-
-    int xorDistance(const NodeID& a, const NodeID& b);
+    std::array<serializable_max_buffer_t, 256> buckets;
 };

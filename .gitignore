@@ -3,3 +3,4 @@ obj/*
 dev/*
 notes/*
 .aider*
+.vscode/*
